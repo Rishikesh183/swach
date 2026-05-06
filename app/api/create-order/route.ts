@@ -7,11 +7,27 @@ const razorpay = new Razorpay({
 });
 
 export async function POST(request: Request) {
-  const { items, total } = await request.json();
+  const { items, total, customer_name, user_id } = await request.json();
 
   if (!items || !Array.isArray(items) || items.length === 0) {
     return Response.json({ error: "No items in cart" }, { status: 400 });
   }
+  if (!customer_name?.trim()) {
+    return Response.json({ error: "Customer name is required" }, { status: 400 });
+  }
+
+  const supabase = createAdminClient();
+
+  // Daily order number: count orders from start of today (UTC)
+  const todayStart = new Date();
+  todayStart.setUTCHours(0, 0, 0, 0);
+
+  const { count } = await supabase
+    .from("orders")
+    .select("*", { count: "exact", head: true })
+    .gte("created_at", todayStart.toISOString());
+
+  const order_number = (count ?? 0) + 1;
 
   const razorpayOrder = await razorpay.orders.create({
     amount: Math.round(total * 100),
@@ -19,7 +35,6 @@ export async function POST(request: Request) {
     receipt: `swach_${Date.now()}`,
   });
 
-  const supabase = createAdminClient();
   const { data: dbOrder, error } = await supabase
     .from("orders")
     .insert({
@@ -31,6 +46,9 @@ export async function POST(request: Request) {
       total_amount: total,
       status: "pending",
       payment_status: "pending",
+      customer_name: customer_name.trim(),
+      order_number,
+      user_id: user_id || null,
     })
     .select("id")
     .single();

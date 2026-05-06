@@ -1,22 +1,46 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useCartStore } from "@/lib/cart-store";
+import { supabase } from "@/lib/supabase";
 import { restaurantInfo } from "@/data/swach-site-data";
 
 const navLinks = [
   { href: "/", label: "Home" },
   { href: "/menu", label: "Menu" },
-  // { href: "/specials", label: "Specials" },
   { href: "/orders", label: "My Orders" },
   { href: "/contact", label: "Contact" },
 ];
 
 export default function Header() {
+  const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [authLoading, setAuthLoading] = useState(true);
   const { itemCount, openCart } = useCartStore();
   const count = itemCount();
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      setUserEmail(data.user?.email ?? null);
+      setAuthLoading(false);
+    });
+
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUserEmail(session?.user?.email ?? null);
+    });
+
+    return () => listener.subscription.unsubscribe();
+  }, []);
+
+  async function handleSignOut() {
+    await supabase.auth.signOut();
+    setMenuOpen(false);
+    router.push("/");
+    router.refresh();
+  }
 
   return (
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-brand-100 shadow-sm">
@@ -40,7 +64,30 @@ export default function Header() {
           ))}
         </nav>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
+          {!authLoading && (
+            userEmail ? (
+              <div className="hidden md:flex items-center gap-2">
+                <span className="text-xs text-foreground/50 max-w-32 truncate">
+                  {userEmail}
+                </span>
+                <button
+                  onClick={handleSignOut}
+                  className="text-xs font-semibold text-foreground/50 hover:text-red-500 transition-colors px-2 py-1"
+                >
+                  Sign out
+                </button>
+              </div>
+            ) : (
+              <Link
+                href="/auth"
+                className="hidden md:inline-flex text-sm font-semibold text-brand-600 hover:text-brand-700 transition-colors px-3 py-1.5 rounded-full hover:bg-brand-50"
+              >
+                Sign in
+              </Link>
+            )
+          )}
+
           <button
             onClick={openCart}
             className="relative flex items-center gap-1.5 bg-brand-500 hover:bg-brand-600 text-white text-sm font-semibold px-4 py-2 rounded-full transition-colors"
@@ -75,6 +122,27 @@ export default function Header() {
               {link.label}
             </Link>
           ))}
+          <div className="border-t border-cream-100 pt-3">
+            {userEmail ? (
+              <>
+                <p className="text-xs text-foreground/40 mb-2">{userEmail}</p>
+                <button
+                  onClick={handleSignOut}
+                  className="text-sm font-semibold text-red-500 hover:text-red-600 py-1"
+                >
+                  Sign out
+                </button>
+              </>
+            ) : (
+              <Link
+                href="/auth"
+                onClick={() => setMenuOpen(false)}
+                className="text-sm font-semibold text-brand-600 hover:text-brand-700 py-1"
+              >
+                Sign in / Create account
+              </Link>
+            )}
+          </div>
         </div>
       )}
     </header>
