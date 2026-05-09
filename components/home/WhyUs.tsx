@@ -1,3 +1,6 @@
+"use client";
+
+import { motion } from "framer-motion";
 import { homePageData } from "@/data/swach-site-data";
 
 export default function WhyUs() {
@@ -12,9 +15,13 @@ export default function WhyUs() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {whyChooseUs.points.map((point) => (
-            <div
+          {whyChooseUs.points.map((point, index) => (
+            <motion.div
               key={point.title}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
               className="bg-white rounded-2xl p-6 shadow-sm border border-cream-200 hover:shadow-md transition-shadow"
             >
               <span className="text-3xl mb-3 block">{point.icon}</span>
@@ -22,7 +29,7 @@ export default function WhyUs() {
               <p className="text-foreground/60 text-sm leading-relaxed">
                 {point.description}
               </p>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>

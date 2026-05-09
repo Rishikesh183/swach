@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import MenuGrid from "@/components/menu/MenuGrid";
+import FadeIn from "@/components/animations/FadeIn";
 import { restaurantInfo } from "@/data/swach-site-data";
 
 export const metadata: Metadata = {
@@ -10,14 +11,17 @@ export const metadata: Metadata = {
 
 export default function MenuPage() {
   return (
-    <main className="max-w-6xl mx-auto px-4 py-12">
-      <div className="mb-10">
-        <h1 className="text-3xl md:text-4xl font-bold text-brand-900">Our Menu</h1>
-        <p className="text-foreground/60 mt-2">
+    <main className="max-w-6xl mx-auto px-4 py-16">
+      <FadeIn direction="up" className="text-center mb-16">
+        <h1 className="text-4xl md:text-5xl font-bold text-brand-900 mb-4">Our Menu</h1>
+        <div className="w-24 h-1 bg-brand-500 mx-auto rounded-full mb-6"></div>
+        <p className="text-foreground/70 text-lg max-w-2xl mx-auto">
           {restaurantInfo.priceRange} · All items are vegetarian · Fresh every day
         </p>
-      </div>
-      <MenuGrid />
+      </FadeIn>
+      <FadeIn delay={0.2} direction="up">
+        <MenuGrid />
+      </FadeIn>
     </main>
   );
 }

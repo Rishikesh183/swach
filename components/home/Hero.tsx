@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { homePageData } from "@/data/swach-site-data";
 
 export default function Hero() {
@@ -13,7 +16,12 @@ export default function Hero() {
       }}
     >
       <div className="absolute inset-0 bg-brand-950/65" />
-      <div className="relative z-10 max-w-3xl mx-auto px-4 text-center">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        className="relative z-10 max-w-3xl mx-auto px-4 text-center"
+      >
         <p className="text-brand-300 font-medium uppercase tracking-widest text-sm mb-3">
           Madhapur, Hyderabad
         </p>
@@ -40,7 +48,7 @@ export default function Hero() {
             {hero.secondaryCta.label}
           </Link>
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 }

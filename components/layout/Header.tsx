@@ -48,7 +48,7 @@ export default function Header() {
         <Link href="/" className="flex items-center gap-2">
           <span className="text-2xl">🍽️</span>
           <span className="font-bold text-lg text-brand-800 leading-tight">
-            {restaurantInfo.name}
+            {restaurantInfo.name} 
           </span>
         </Link>
 

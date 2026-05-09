@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { homePageData } from "@/data/swach-site-data";
 
 export default function CTASection() {
@@ -13,7 +16,13 @@ export default function CTASection() {
       }}
     >
       <div className="absolute inset-0 bg-brand-950/75" />
-      <div className="relative z-10 max-w-2xl mx-auto px-4">
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.95 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.6 }}
+        className="relative z-10 max-w-2xl mx-auto px-4"
+      >
         <h2 className="text-3xl md:text-5xl font-bold mb-4">{cta.heading}</h2>
         <p className="text-brand-200 text-lg mb-8">{cta.subheading}</p>
         <Link
@@ -22,7 +31,7 @@ export default function CTASection() {
         >
           {cta.buttonLabel}
         </Link>
-      </div>
+      </motion.div>
     </section>
   );
 }

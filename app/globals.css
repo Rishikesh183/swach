@@ -6,18 +6,18 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 
-  /* Swach brand colors */
-  --color-brand-50: #fff8ed;
-  --color-brand-100: #ffefd4;
-  --color-brand-200: #ffdba8;
-  --color-brand-300: #ffc272;
-  --color-brand-400: #ff9d39;
-  --color-brand-500: #f97c17;
-  --color-brand-600: #ea5f0d;
-  --color-brand-700: #c2450d;
-  --color-brand-800: #9a3713;
-  --color-brand-900: #7c2f12;
-  --color-brand-950: #431507;
+  /* Swach brand colors (Earthy Green) */
+  --color-brand-50: #f2f7f4;
+  --color-brand-100: #e1efe5;
+  --color-brand-200: #c4dfcd;
+  --color-brand-300: #98c6a8;
+  --color-brand-400: #65a77c;
+  --color-brand-500: #428a5c;
+  --color-brand-600: #306e46;
+  --color-brand-700: #275839;
+  --color-brand-800: #21462f;
+  --color-brand-900: #1c3a27;
+  --color-brand-950: #0f2016;
 
   --color-leaf-50: #f1f8f1;
   --color-leaf-100: #dff0de;

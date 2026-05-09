@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
 import { useCartStore } from "@/lib/cart-store";
 import { supabase } from "@/lib/supabase";
 
@@ -23,96 +24,121 @@ export default function CartDrawer() {
 
   const cartTotal = total();
 
-  if (!isOpen) return null;
-
   return (
-    <>
-      <div className="fixed inset-0 bg-black/40 z-40" onClick={closeCart} />
-      <div className="fixed right-0 top-0 h-full w-full max-w-md bg-white z-50 shadow-2xl flex flex-col">
-        <div className="flex items-center justify-between px-5 py-4 border-b border-cream-200">
-          <h2 className="text-xl font-bold text-brand-900">
-            {step === "cart" ? "Your Cart 🛒" : "Order Details"}
-          </h2>
-          <button
+    <AnimatePresence>
+      {isOpen && (
+        <>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40"
             onClick={closeCart}
-            className="text-foreground/60 hover:text-foreground text-2xl leading-none"
+          />
+          <motion.div
+            initial={{ x: "100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "100%" }}
+            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+            className="fixed right-0 top-0 h-full w-full max-w-md bg-white z-50 shadow-2xl flex flex-col border-l border-cream-200"
           >
-            ✕
-          </button>
-        </div>
+            <div className="flex items-center justify-between px-6 py-5 border-b border-cream-200 bg-brand-50/50">
+              <h2 className="text-xl font-bold text-brand-900 flex items-center gap-2">
+                {step === "cart" ? "Your Cart 🛒" : "Order Details"}
+              </h2>
+              <button
+                onClick={closeCart}
+                className="w-8 h-8 rounded-full bg-white border border-cream-200 flex items-center justify-center text-foreground/50 hover:text-brand-700 hover:bg-brand-50 transition-colors shadow-sm"
+              >
+                ✕
+              </button>
+            </div>
 
         {items.length === 0 ? (
           <div className="flex-1 flex flex-col items-center justify-center text-center px-6">
-            <span className="text-6xl mb-4">🍽️</span>
-            <p className="text-foreground/60 font-medium">Your cart is empty</p>
-            <p className="text-foreground/40 text-sm mt-1">
-              Add items from the menu to get started
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.1 }}
+              className="w-24 h-24 bg-brand-50 rounded-full flex items-center justify-center mb-6 border border-brand-100 shadow-inner"
+            >
+              <span className="text-5xl">🍽️</span>
+            </motion.div>
+            <h3 className="text-xl font-bold text-brand-900 mb-2">Your cart is empty</h3>
+            <p className="text-foreground/60 text-sm max-w-[250px] mx-auto">
+              Looks like you haven't added anything to your cart yet.
             </p>
             <button
               onClick={closeCart}
-              className="mt-6 bg-brand-500 hover:bg-brand-600 text-white font-semibold px-6 py-2.5 rounded-full transition-colors"
+              className="mt-8 bg-brand-500 hover:bg-brand-600 text-white font-bold px-8 py-3.5 rounded-full transition-colors shadow-md"
             >
               Browse Menu
             </button>
           </div>
         ) : step === "cart" ? (
           <>
-            <div className="flex-1 overflow-y-auto px-5 py-4 space-y-3">
-              {items.map((item) => (
-                <div
-                  key={item.id}
-                  className="flex items-center gap-3 bg-cream-50 rounded-xl p-3"
-                >
-                  <div className="flex-1">
-                    <p className="font-semibold text-brand-900 text-sm">{item.name}</p>
-                    <p className="text-brand-600 font-bold text-sm">
-                      ₹{item.price} × {item.quantity} = ₹{item.price * item.quantity}
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <button
-                      onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                      className="w-7 h-7 rounded-full bg-brand-100 hover:bg-brand-200 text-brand-700 font-bold flex items-center justify-center transition-colors"
-                    >
-                      −
-                    </button>
-                    <span className="w-6 text-center font-semibold text-sm">
-                      {item.quantity}
-                    </span>
-                    <button
-                      onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                      className="w-7 h-7 rounded-full bg-brand-100 hover:bg-brand-200 text-brand-700 font-bold flex items-center justify-center transition-colors"
-                    >
-                      +
-                    </button>
-                  </div>
-                  <button
-                    onClick={() => removeItem(item.id)}
-                    className="text-red-400 hover:text-red-600 text-lg transition-colors"
-                    title="Remove"
+            <div className="flex-1 overflow-y-auto px-6 py-6 space-y-4">
+              <AnimatePresence>
+                {items.map((item) => (
+                  <motion.div
+                    key={item.id}
+                    layout
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    className="flex items-center gap-4 bg-white border border-cream-200 shadow-sm rounded-2xl p-4"
                   >
-                    🗑
-                  </button>
-                </div>
-              ))}
+                    <div className="flex-1">
+                      <p className="font-bold text-brand-900 text-base mb-1">{item.name}</p>
+                      <p className="text-brand-600 font-semibold text-sm">
+                        ₹{item.price} <span className="text-foreground/40 font-normal">× {item.quantity}</span>
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-3 bg-cream-50 rounded-full border border-cream-200 p-1">
+                      <button
+                        onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                        className="w-8 h-8 rounded-full bg-white hover:bg-brand-100 text-brand-700 font-bold flex items-center justify-center transition-colors shadow-sm"
+                      >
+                        −
+                      </button>
+                      <span className="w-4 text-center font-bold text-sm">
+                        {item.quantity}
+                      </span>
+                      <button
+                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                        className="w-8 h-8 rounded-full bg-white hover:bg-brand-100 text-brand-700 font-bold flex items-center justify-center transition-colors shadow-sm"
+                      >
+                        +
+                      </button>
+                    </div>
+                    <button
+                      onClick={() => removeItem(item.id)}
+                      className="text-foreground/30 hover:text-red-500 text-xl transition-colors p-2"
+                      title="Remove"
+                    >
+                      ✕
+                    </button>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
             </div>
 
-            <div className="border-t border-cream-200 px-5 py-4 space-y-3">
-              <div className="flex justify-between items-center">
-                <span className="text-foreground/70 font-medium">Subtotal</span>
+            <div className="border-t border-cream-200 bg-brand-50/30 px-6 py-6 space-y-4">
+              <div className="flex justify-between items-center bg-white p-4 rounded-xl border border-cream-200 shadow-sm">
+                <span className="text-foreground/70 font-bold">Subtotal</span>
                 <span className="text-2xl font-bold text-brand-700">₹{cartTotal}</span>
               </div>
               <button
                 onClick={() => setStep("details")}
-                className="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-3.5 rounded-full text-lg transition-colors shadow-sm"
+                className="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-4 rounded-full text-lg transition-colors shadow-md flex items-center justify-center gap-2"
               >
-                Continue — ₹{cartTotal}
+                Continue to Details <span className="text-brand-200">→</span>
               </button>
               <button
                 onClick={clearCart}
-                className="w-full text-sm text-foreground/40 hover:text-red-500 transition-colors py-1"
+                className="w-full text-sm font-semibold text-foreground/40 hover:text-red-500 transition-colors py-2"
               >
-                Clear cart
+                Clear Cart
               </button>
             </div>
           </>
@@ -122,8 +148,10 @@ export default function CartDrawer() {
             onBack={() => setStep("cart")}
           />
         )}
-      </div>
-    </>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
   );
 }
 

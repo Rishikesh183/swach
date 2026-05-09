@@ -1,12 +1,21 @@
+"use client";
+
 import Image from "next/image";
+import { motion } from "framer-motion";
 import { homePageData } from "@/data/swach-site-data";
 
 export default function About() {
   const { about } = homePageData;
   return (
-    <section className="py-20 bg-cream-50">
+    <section className="py-20 bg-cream-50 overflow-hidden">
       <div className="max-w-6xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-        <div className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-xl">
+        <motion.div 
+          initial={{ opacity: 0, x: -50 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8 }}
+          className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-xl"
+        >
           <Image
             src={about.imageFallback}
             alt="Inside Swach South Indian Cafe"
@@ -14,9 +23,14 @@ export default function About() {
             className="object-cover"
             sizes="(max-width: 1024px) 100vw, 50vw"
           />
-        </div>
+        </motion.div>
 
-        <div>
+        <motion.div
+          initial={{ opacity: 0, x: 50 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8 }}
+        >
           <p className="text-brand-600 font-semibold uppercase tracking-widest text-sm mb-2">
             {about.subheading}
           </p>
@@ -44,7 +58,7 @@ export default function About() {
               </div>
             ))}
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

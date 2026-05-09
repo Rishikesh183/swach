@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { homePageData } from "@/data/swach-site-data";
 import { useCartStore } from "@/lib/cart-store";
 import { menuItems } from "@/data/swach-site-data";
@@ -31,9 +32,13 @@ export default function Highlights() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {highlights.items.map((item) => (
-            <div
+          {highlights.items.map((item, index) => (
+            <motion.div
               key={item.id}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
               className="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-shadow border border-cream-200"
             >
               <div className="relative aspect-[4/3]">
@@ -65,7 +70,7 @@ export default function Highlights() {
                   </button>
                 </div>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
 

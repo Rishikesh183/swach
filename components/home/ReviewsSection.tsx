@@ -1,3 +1,6 @@
+"use client";
+
+import { motion } from "framer-motion";
 import { reviewsData } from "@/data/swach-site-data";
 
 function StarRating({ rating }: { rating: number }) {
@@ -41,7 +44,13 @@ export default function ReviewsSection() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 items-start">
-          <div className="bg-cream-50 rounded-2xl p-6 shadow-sm border border-cream-200">
+          <motion.div 
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.6 }}
+            className="bg-cream-50 rounded-2xl p-6 shadow-sm border border-cream-200"
+          >
             <div className="text-center mb-6">
               <p className="text-6xl font-bold text-brand-600">{averageRating}</p>
               <StarRating rating={Math.round(averageRating)} />
@@ -58,12 +67,16 @@ export default function ReviewsSection() {
                 />
               ))}
             </div>
-          </div>
+          </motion.div>
 
           <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {reviews.map((review) => (
-              <div
+            {reviews.map((review, index) => (
+              <motion.div
                 key={review.id}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
                 className="bg-white rounded-2xl p-5 shadow-sm border border-cream-200 hover:shadow-md transition-shadow"
               >
                 <div className="flex items-center gap-3 mb-3">
@@ -82,7 +95,7 @@ export default function ReviewsSection() {
                 <p className="text-xs text-brand-500 mt-2 font-medium">
                   Tried: {review.dish}
                 </p>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
