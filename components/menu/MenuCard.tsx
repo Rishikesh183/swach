@@ -29,9 +29,9 @@ export default function MenuCard({ item }: { item: MenuItem }) {
 
   return (
     <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-cream-200 hover:shadow-md transition-shadow flex flex-col">
-      <div className="relative aspect-[4/3] bg-cream-100">
+      <div className="relative aspect-4/3 bg-cream-100">
         <Image
-          src={item.imageFallback}
+          src={item.image}
           alt={item.name}
           fill
           className="object-cover"

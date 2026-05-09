@@ -29,7 +29,7 @@ export default function MenuGrid() {
           <button
             key={cat.id}
             onClick={() => setActiveCategory(cat.id)}
-            className={`flex-shrink-0 px-5 py-2 rounded-full text-sm font-semibold transition-colors ${
+            className={`shrink-0 px-5 py-2 rounded-full text-sm font-semibold transition-colors ${
               activeCategory === cat.id
                 ? "bg-brand-500 text-white"
                 : "bg-white border border-cream-200 text-foreground/70 hover:border-brand-300"
